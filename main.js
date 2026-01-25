@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const topPopularContainer = document.getElementById('top-popular-container');
     const newAnimeContainer = document.getElementById('new-anime-container');
     const topRatedContainer = document.getElementById('top-rated-container');
+    const annNewsContainer = document.getElementById('ann-news-container'); // New News Container
 
     // Controls
     const searchForm = document.getElementById('search-form');
@@ -254,6 +255,42 @@ document.addEventListener('DOMContentLoaded', () => {
             loadingIndicator.style.display = 'none';
         }
     };
+
+    // --- ANN News Fetching ---
+    const ANN_RSS_URL = 'https://www.animenewsnetwork.com/all/rss.xml';
+    const CORS_PROXY_URL = 'https://api.allorigins.win/get?url='; // Public CORS proxy
+
+    const fetchAnnNews = async () => {
+        annNewsContainer.innerHTML = '<p>뉴스를 불러오는 중...</p>';
+        try {
+            const response = await fetch(`${CORS_PROXY_URL}${encodeURIComponent(ANN_RSS_URL)}`);
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            const data = await response.json();
+            const parser = new DOMParser();
+            const xmlDoc = parser.parseFromString(data.contents, 'text/xml');
+            const items = xmlDoc.querySelectorAll('item');
+
+            annNewsContainer.innerHTML = ''; // Clear loading message
+
+            items.slice(0, 10).forEach(item => {
+                const title = item.querySelector('title').textContent;
+                const link = item.querySelector('link').textContent;
+                const pubDate = new Date(item.querySelector('pubDate').textContent).toLocaleDateString('ko-KR');
+
+                const newsItemDiv = document.createElement('div');
+                newsItemDiv.className = 'news-item';
+                newsItemDiv.innerHTML = `
+                    <h3><a href="${link}" target="_blank">${title}</a></h3>
+                    <p>${pubDate}</p>
+                `;
+                annNewsContainer.appendChild(newsItemDiv);
+            });
+
+        } catch (error) {
+            console.error('Error fetching ANN news:', error);
+            annNewsContainer.innerHTML = '<p>뉴스 데이터를 불러오는 데 실패했습니다.</p>';
+        }
+    };
     
     // --- Page Control ---
     const showSearchResults = (show) => {
@@ -278,6 +315,8 @@ document.addEventListener('DOMContentLoaded', () => {
         displayAnime(popularData, topPopularContainer);
         displayAnime(newData, newAnimeContainer);
         displayAnime(ratedData, topRatedContainer);
+        
+        fetchAnnNews(); // Fetch ANN News on initial load
     };
 
     searchForm.addEventListener('submit', (e) => {
