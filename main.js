@@ -13,8 +13,32 @@ document.addEventListener('DOMContentLoaded', () => {
     const siteTitle = document.querySelector('header h1');
     const loadingIndicator = document.getElementById('loading');
 
+    // Modal
+    const modalOverlay = document.getElementById('modal-overlay');
+    const modalContent = document.getElementById('modal-content');
+    const modalBody = document.getElementById('modal-body');
+    const modalCloseBtn = document.getElementById('modal-close-btn');
+
     const API_BASE = 'https://api.jikan.moe/v4';
 
+    // --- Modal Logic ---
+    const openModal = () => modalOverlay.style.display = 'flex';
+    const closeModal = () => {
+        modalOverlay.style.display = 'none';
+        modalBody.innerHTML = ''; // Clear content on close
+    };
+
+    modalCloseBtn.addEventListener('click', closeModal);
+    modalOverlay.addEventListener('click', (e) => {
+        if (e.target === modalOverlay) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modalOverlay.style.display === 'flex') {
+            closeModal();
+        }
+    });
+
+    // --- Data Display Logic ---
     const displayAnime = (animeList, container) => {
         container.innerHTML = '';
         if (!animeList || animeList.length === 0) {
@@ -25,7 +49,6 @@ document.addEventListener('DOMContentLoaded', () => {
         animeList.forEach(anime => {
             const animeCard = document.createElement('div');
             animeCard.className = 'anime-card';
-
             const title = anime.title_japanese || anime.title;
             const imageUrl = anime.images.jpg.large_image_url;
 
@@ -36,30 +59,57 @@ document.addEventListener('DOMContentLoaded', () => {
                     <p>⭐ ${anime.score || 'N/A'}</p>
                 </div>
             `;
-            animeCard.addEventListener('click', () => {
-                window.open(anime.url, '_blank');
-            });
+            animeCard.addEventListener('click', () => showDetails(anime.mal_id));
             container.appendChild(animeCard);
         });
     };
 
-    const fetchData = async (endpoint, limit = 10) => {
+    const showDetails = async (animeId) => {
+        openModal();
+        modalBody.innerHTML = '<div id="loading">불러오는 중...</div>';
+        
+        const anime = await fetchData(`/anime/${animeId}/full`);
+        if (!anime) {
+            modalBody.innerHTML = '<p>세부 정보를 불러오는 데 실패했습니다.</p>';
+            return;
+        }
+
+        const synopsis = anime.synopsis ? anime.synopsis.replace(/\n/g, '<br>') : '줄거리가 없습니다.';
+        
+        modalBody.innerHTML = `
+            <div class="modal-grid">
+                <img src="${anime.images.jpg.large_image_url}" alt="${anime.title}">
+                <div class="modal-info">
+                    <h2>${anime.title_japanese || anime.title}</h2>
+                    <div class="modal-stats">
+                        <div class="stat">점수<span>⭐ ${anime.score || 'N/A'}</span></div>
+                        <div class="stat">순위<span>#${anime.rank || 'N/A'}</span></div>
+                        <div class="stat">인기<span>#${anime.popularity || 'N/A'}</span></div>
+                    </div>
+                    <p class="synopsis">${synopsis}</p>
+                </div>
+            </div>
+        `;
+    };
+
+    // --- API Fetching ---
+    const fetchData = async (endpoint) => {
         loadingIndicator.style.display = 'block';
         try {
-            const url = `${API_BASE}${endpoint}${endpoint.includes('?') ? '&' : '?'}limit=${limit}&sfw`;
+            const url = `${API_BASE}${endpoint}`;
             const response = await fetch(url);
             if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
             const data = await response.json();
             return data.data;
         } catch (error) {
             console.error('API fetch error:', error);
-            // Optionally display an error in the specific container
             return null;
         } finally {
             loadingIndicator.style.display = 'none';
         }
     };
     
+    // --- Page Control ---
     const showSearchResults = (show) => {
         searchResultsContainer.style.display = show ? 'block' : 'none';
         sectionsContainer.style.display = show ? 'none' : 'block';
@@ -67,15 +117,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const searchAnime = async (query) => {
         showSearchResults(true);
-        const animeList = await fetchData(`/anime?q=${encodeURIComponent(query)}`);
+        const animeList = await fetchData(`/anime?q=${encodeURIComponent(query)}&sfw`);
         displayAnime(animeList, resultsGrid);
     };
 
     const loadInitialSections = async () => {
         showSearchResults(false);
-        const topPopular = fetchData('/top/anime?filter=bypopularity');
-        const newAnime = fetchData('/seasons/now');
-        const topRated = fetchData('/top/anime?filter=favorite');
+        const topPopular = fetchData('/top/anime?filter=bypopularity&limit=10');
+        const newAnime = fetchData('/seasons/now?limit=10');
+        const topRated = fetchData('/top/anime?filter=favorite&limit=10');
         
         const [popularData, newData, ratedData] = await Promise.all([topPopular, newAnime, topRated]);
         
