@@ -11,6 +11,8 @@
     --placeholder-text: #ecf0f1;
     --btn-bg: #3498db;
     --btn-hover-bg: #2980b9;
+    --form-border: #ccc;
+    --form-focus-border: #3498db;
 }
 
 body {
@@ -36,6 +38,8 @@ body.dark-mode {
     --placeholder-text: #95a5a6;
     --btn-bg: #5fa8d3;
     --btn-hover-bg: #4a90c2;
+    --form-border: #555;
+    --form-focus-border: #5fa8d3;
 }
 
 
@@ -47,6 +51,8 @@ body.dark-mode {
     box-shadow: var(--container-shadow);
     transition: background-color 0.3s ease;
     position: relative;
+    max-width: 600px;
+    width: 90%;
 }
 
 #theme-toggle {
@@ -58,6 +64,7 @@ body.dark-mode {
     border: none;
     background: none;
     color: var(--text-color);
+    transition: color 0.3s ease;
 }
 
 h1 {
@@ -124,5 +131,78 @@ p {
 }
 
 #generate-btn:active {
+    transform: scale(0.98);
+}
+
+/* Form Styles */
+.contact-form {
+    text-align: left;
+    margin-top: 20px;
+    width: 100%;
+}
+
+.contact-form h2 {
+    color: var(--h1-color);
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.contact-form p {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--text-color);
+    font-weight: bold;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group textarea {
+    width: calc(100% - 20px);
+    padding: 10px;
+    border: 1px solid var(--form-border);
+    border-radius: 5px;
+    font-size: 16px;
+    background-color: var(--container-bg);
+    color: var(--text-color);
+    transition: border-color 0.3s ease;
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="email"]:focus,
+.form-group textarea:focus {
+    border-color: var(--form-focus-border);
+    outline: none;
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 15px;
+    font-size: 20px;
+    font-family: 'Nanum Gothic', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    border-radius: 10px;
+    background-color: #27ae60; /* Green for submit */
+    color: white;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-top: 10px;
+}
+
+.submit-btn:hover {
+    background-color: #229954;
+}
+
+.submit-btn:active {
     transform: scale(0.98);
 }
