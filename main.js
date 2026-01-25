@@ -159,6 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const themeOpenings = anime.theme.openings || [];
         const themeEndings = anime.theme.endings || [];
         let youtubeVideosHTML = '';
+        let foundAnyYoutubeVideo = false; // Track if any video was found
 
         if (themeOpenings.length > 0 || themeEndings.length > 0) {
             modalContentHTML += `<h3 class="modal-section-title">주제가</h3><div class="youtube-videos-section">`;
@@ -167,37 +168,43 @@ document.addEventListener('DOMContentLoaded', () => {
             if (themeOpenings[0]) {
                 const opTitle = themeOpenings[0].replace(/#\d+:\s*/, ''); // Clean up "OP #1:" etc.
                 const query = `${anime.title} ${opTitle} opening`;
-                youtubePromises.push(fetchYoutubeVideoId(query).then(videoId => ({ type: 'opening', videoId, title: opTitle })));
+                youtubePromises.push(fetchYoutubeVideoId(query).then(videoId => ({ type: 'opening', videoId, title: opTitle, search_query: query })));
             }
             if (themeEndings[0]) {
                 const edTitle = themeEndings[0].replace(/#\d+:\s*/, ''); // Clean up "ED #1:" etc.
                 const query = `${anime.title} ${edTitle} ending`;
-                youtubePromises.push(fetchYoutubeVideoId(query).then(videoId => ({ type: 'ending', videoId, title: edTitle })));
+                youtubePromises.push(fetchYoutubeVideoId(query).then(videoId => ({ type: 'ending', videoId, title: edTitle, search_query: query })));
             }
 
             const results = await Promise.all(youtubePromises);
 
             results.forEach(result => {
                 if (result.videoId) {
+                    foundAnyYoutubeVideo = true;
                     youtubeVideosHTML += `
                         <div class="youtube-player-container">
                             <h4>${result.type === 'opening' ? '오프닝' : '엔딩'}: ${result.title}</h4>
                             <iframe 
-                                src="https://www.youtube.com/embed/${result.videoId}?autoplay=0&rel=0"
+                                src="https://www.youtube.com/embed/${result.videoId}?autoplay=0&rel=0" 
                                 frameborder="0" 
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                                 allowfullscreen>
                             </iframe>
+                        </div>
+                    `;
+                } else {
+                    // Provide a link to YouTube search if no video was found
+                    const searchLink = `https://www.youtube.com/results?search_query=${encodeURIComponent(result.search_query)}`;
+                    youtubeVideosHTML += `
+                        <div class="youtube-player-container no-video">
+                            <h4>${result.type === 'opening' ? '오프닝' : '엔딩'}: ${result.title}</h4>
+                            <p>영상을 찾을 수 없습니다. <a href="${searchLink}" target="_blank">YouTube에서 검색하기</a></p>
                         </div>
                     `;
                 }
             });
 
-            if (youtubeVideosHTML) {
-                modalContentHTML += youtubeVideosHTML + '</div>';
-            } else {
-                modalContentHTML += `<p>관련 YouTube 영상을 찾을 수 없습니다.</p></div>`;
-            }
+            modalContentHTML += youtubeVideosHTML + '</div>';
         }
 
 

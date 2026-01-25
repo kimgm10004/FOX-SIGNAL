@@ -367,6 +367,29 @@ main {
     border-radius: 5px;
 }
 
+.youtube-player-container.no-video {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 150px;
+}
+
+.youtube-player-container.no-video p {
+    margin: 10px 0;
+    text-align: center;
+}
+
+.youtube-player-container.no-video a {
+    color: var(--accent-color);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.youtube-player-container.no-video a:hover {
+    text-decoration: underline;
+}
+
 
 @media (max-width: 768px) {
     .modal-grid {
