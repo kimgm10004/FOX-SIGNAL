@@ -16,9 +16,26 @@
     </header>
 
     <main>
-        <div id="results-container">
-            <!-- Search results or top anime will be displayed here -->
+        <div id="sections-container">
+            <section class="anime-section">
+                <h2>🏆 인기 TOP 10</h2>
+                <div class="anime-row" id="top-popular-container"></div>
+            </section>
+            <section class="anime-section">
+                <h2>✨ 신규 방영작 TOP 10</h2>
+                <div class="anime-row" id="new-anime-container"></div>
+            </section>
+            <section class="anime-section">
+                <h2>⭐ 평점 TOP 10</h2>
+                <div class="anime-row" id="top-rated-container"></div>
+            </section>
         </div>
+
+        <div id="search-results-container" style="display: none;">
+            <h2>검색 결과</h2>
+            <div id="results-grid"></div>
+        </div>
+        
         <div id="loading" style="display: none;">불러오는 중...</div>
     </main>
 

@@ -1,16 +1,24 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Containers
+    const sectionsContainer = document.getElementById('sections-container');
+    const searchResultsContainer = document.getElementById('search-results-container');
+    const resultsGrid = document.getElementById('results-grid');
+    const topPopularContainer = document.getElementById('top-popular-container');
+    const newAnimeContainer = document.getElementById('new-anime-container');
+    const topRatedContainer = document.getElementById('top-rated-container');
+
+    // Controls
     const searchForm = document.getElementById('search-form');
     const searchInput = document.getElementById('search-input');
-    const resultsContainer = document.getElementById('results-container');
-    const loadingIndicator = document.getElementById('loading');
     const siteTitle = document.querySelector('header h1');
+    const loadingIndicator = document.getElementById('loading');
 
     const API_BASE = 'https://api.jikan.moe/v4';
 
-    const displayAnime = (animeList) => {
-        resultsContainer.innerHTML = '';
+    const displayAnime = (animeList, container) => {
+        container.innerHTML = '';
         if (!animeList || animeList.length === 0) {
-            resultsContainer.innerHTML = '<p>검색 결과가 없습니다.</p>';
+            container.innerHTML = '<p>결과가 없습니다.</p>';
             return;
         }
 
@@ -28,56 +36,65 @@ document.addEventListener('DOMContentLoaded', () => {
                     <p>⭐ ${anime.score || 'N/A'}</p>
                 </div>
             `;
-            // Add click event to open mal_id link
             animeCard.addEventListener('click', () => {
                 window.open(anime.url, '_blank');
             });
-            resultsContainer.appendChild(animeCard);
+            container.appendChild(animeCard);
         });
     };
 
-    const fetchData = async (endpoint) => {
+    const fetchData = async (endpoint, limit = 10) => {
         loadingIndicator.style.display = 'block';
-        resultsContainer.innerHTML = '';
         try {
-            const response = await fetch(`${API_BASE}${endpoint}`);
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
+            const url = `${API_BASE}${endpoint}${endpoint.includes('?') ? '&' : '?'}limit=${limit}&sfw`;
+            const response = await fetch(url);
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
             const data = await response.json();
             return data.data;
         } catch (error) {
             console.error('API fetch error:', error);
-            resultsContainer.innerHTML = '<p>데이터를 불러오는 중 오류가 발생했습니다. 나중에 다시 시도해주세요.</p>';
+            // Optionally display an error in the specific container
             return null;
         } finally {
             loadingIndicator.style.display = 'none';
         }
     };
-
-    const searchAnime = async (query) => {
-        const animeList = await fetchData(`/anime?q=${encodeURIComponent(query)}&sfw`);
-        displayAnime(animeList);
+    
+    const showSearchResults = (show) => {
+        searchResultsContainer.style.display = show ? 'block' : 'none';
+        sectionsContainer.style.display = show ? 'none' : 'block';
     };
 
-    const getTopAnime = async () => {
-        const animeList = await fetchData('/top/anime?filter=airing');
-        displayAnime(animeList);
+    const searchAnime = async (query) => {
+        showSearchResults(true);
+        const animeList = await fetchData(`/anime?q=${encodeURIComponent(query)}`);
+        displayAnime(animeList, resultsGrid);
+    };
+
+    const loadInitialSections = async () => {
+        showSearchResults(false);
+        const topPopular = fetchData('/top/anime?filter=bypopularity');
+        const newAnime = fetchData('/seasons/now');
+        const topRated = fetchData('/top/anime?filter=favorite');
+        
+        const [popularData, newData, ratedData] = await Promise.all([topPopular, newAnime, topRated]);
+        
+        displayAnime(popularData, topPopularContainer);
+        displayAnime(newData, newAnimeContainer);
+        displayAnime(ratedData, topRatedContainer);
     };
 
     searchForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const query = searchInput.value.trim();
-        if (query) {
-            searchAnime(query);
-        }
+        if (query) searchAnime(query);
     });
 
     siteTitle.addEventListener('click', () => {
         searchInput.value = '';
-        getTopAnime();
+        showSearchResults(false);
     });
 
     // Initial load
-    getTopAnime();
+    loadInitialSections();
 });
