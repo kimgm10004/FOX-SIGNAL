@@ -250,6 +250,77 @@ main {
     background-color: #45a049;
 }
 
+/* Character Section Styles */
+.modal-info h3 {
+    font-size: 1.5rem;
+    color: var(--accent-color);
+    margin-top: 30px;
+    margin-bottom: 15px;
+    border-left: 5px solid var(--accent-color);
+    padding-left: 10px;
+}
+
+.characters-row {
+    display: flex;
+    overflow-x: auto;
+    gap: 15px;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    /* Custom Scrollbar for characters-row */
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent-color) var(--secondary-color);
+}
+
+.characters-row::-webkit-scrollbar {
+    height: 8px;
+}
+.characters-row::-webkit-scrollbar-track {
+    background: var(--secondary-color);
+    border-radius: 4px;
+}
+.characters-row::-webkit-scrollbar-thumb {
+    background: var(--accent-color);
+    border-radius: 4px;
+}
+
+.character-card {
+    flex-shrink: 0;
+    width: 120px;
+    text-align: center;
+    background-color: var(--secondary-color);
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.character-card img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 5px;
+    border: 2px solid var(--accent-color);
+}
+
+.character-card .character-name {
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: var(--text-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 2px;
+}
+
+.character-card .voice-actor {
+    font-size: 0.8rem;
+    color: #a0a0b0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
 @media (max-width: 768px) {
     .modal-grid {
         grid-template-columns: 1fr;

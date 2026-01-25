@@ -68,7 +68,11 @@ document.addEventListener('DOMContentLoaded', () => {
         openModal();
         modalBody.innerHTML = '<div id="loading">불러오는 중...</div>';
         
-        const anime = await fetchData(`/anime/${animeId}/full`);
+        const animePromise = fetchData(`/anime/${animeId}/full`);
+        const charactersPromise = fetchData(`/anime/${animeId}/characters`);
+
+        const [anime, charactersData] = await Promise.all([animePromise, charactersPromise]);
+
         if (!anime) {
             modalBody.innerHTML = '<p>세부 정보를 불러오는 데 실패했습니다.</p>';
             return;
@@ -76,7 +80,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const synopsis = anime.synopsis ? anime.synopsis : '줄거리가 없습니다.';
         
-        modalBody.innerHTML = `
+        // Main Anime Info
+        let modalContentHTML = `
             <div class="modal-grid">
                 <img src="${anime.images.jpg.large_image_url}" alt="${anime.title}">
                 <div class="modal-info">
@@ -92,6 +97,30 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         `;
 
+        // Characters Info
+        if (charactersData && charactersData.length > 0) {
+            const mainCharacters = charactersData.filter(char => char.role === 'Main');
+            if (mainCharacters.length > 0) {
+                modalContentHTML += `
+                    <h3>주요 등장인물</h3>
+                    <div class="characters-row">
+                `;
+                mainCharacters.slice(0, 5).forEach(char => {
+                    const voiceActor = char.voice_actors.find(va => va.language === 'Japanese');
+                    modalContentHTML += `
+                        <div class="character-card">
+                            <img src="${char.character.images.jpg.image_url}" alt="${char.character.name}">
+                            <p class="character-name">${char.character.name}</p>
+                            ${voiceActor ? `<p class="voice-actor">${voiceActor.person.name}</p>` : ''}
+                        </div>
+                    `;
+                });
+                modalContentHTML += `</div>`;
+            }
+        }
+
+        modalBody.innerHTML = modalContentHTML;
+
         document.getElementById('translate-btn').addEventListener('click', () => {
             const googleTranslateUrl = `https://translate.google.com/?sl=auto&tl=ko&text=${encodeURIComponent(synopsis)}&op=translate`;
             window.open(googleTranslateUrl, '_blank');
@@ -99,11 +128,13 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // --- API Fetching ---
-    const fetchData = async (endpoint) => {
+    const fetchData = async (endpoint, limit = 10) => { // Removed limit from global fetchData
         loadingIndicator.style.display = 'block';
         try {
-            const url = `${API_BASE}${endpoint}`;
-            const response = await fetch(url);
+            const url = `${API_BASE}${endpoint}${endpoint.includes('?') ? '&' : '?'}limit=${limit}&sfw`;
+            // If the endpoint is for characters or full details, limit might not be applicable or need a different approach
+            const finalUrl = endpoint.includes('/characters') || endpoint.includes('/full') ? `${API_BASE}${endpoint}` : url;
+            const response = await fetch(finalUrl);
             if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
             const data = await response.json();
             return data.data;
