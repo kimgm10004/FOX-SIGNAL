@@ -105,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <h3>주요 등장인물</h3>
                     <div class="characters-row">
                 `;
-                mainCharacters.slice(0, 5).forEach(char => {
+                mainCharacters.forEach(char => {
                     const voiceActor = char.voice_actors.find(va => va.language === 'Japanese');
                     modalContentHTML += `
                         <div class="character-card">
