@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        const synopsis = anime.synopsis ? anime.synopsis.replace(/\n/g, '<br>') : '줄거리가 없습니다.';
+        const synopsis = anime.synopsis ? anime.synopsis : '줄거리가 없습니다.';
         
         modalBody.innerHTML = `
             <div class="modal-grid">
@@ -86,10 +86,16 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="stat">순위<span>#${anime.rank || 'N/A'}</span></div>
                         <div class="stat">인기<span>#${anime.popularity || 'N/A'}</span></div>
                     </div>
-                    <p class="synopsis">${synopsis}</p>
+                    <p class="synopsis">${synopsis.replace(/\n/g, '<br>')}</p>
+                    <button id="translate-btn" class="translate-button">한국어로 번역</button>
                 </div>
             </div>
         `;
+
+        document.getElementById('translate-btn').addEventListener('click', () => {
+            const googleTranslateUrl = `https://translate.google.com/?sl=auto&tl=ko&text=${encodeURIComponent(synopsis)}&op=translate`;
+            window.open(googleTranslateUrl, '_blank');
+        });
     };
 
     // --- API Fetching ---
