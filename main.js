@@ -1,77 +1,83 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const lottoNumbersDiv = document.getElementById('lotto-numbers');
-    const generateBtn = document.getElementById('generate-btn');
-    const themeToggleBtn = document.getElementById('theme-toggle');
-    const body = document.body;
+    const searchForm = document.getElementById('search-form');
+    const searchInput = document.getElementById('search-input');
+    const resultsContainer = document.getElementById('results-container');
+    const loadingIndicator = document.getElementById('loading');
+    const siteTitle = document.querySelector('header h1');
 
-    // Theme switcher logic
-    const applyTheme = (theme) => {
-        if (theme === 'dark') {
-            body.classList.add('dark-mode');
-            themeToggleBtn.textContent = '☀️';
-        } else {
-            body.classList.remove('dark-mode');
-            themeToggleBtn.textContent = '🌙';
+    const API_BASE = 'https://api.jikan.moe/v4';
+
+    const displayAnime = (animeList) => {
+        resultsContainer.innerHTML = '';
+        if (!animeList || animeList.length === 0) {
+            resultsContainer.innerHTML = '<p>검색 결과가 없습니다.</p>';
+            return;
+        }
+
+        animeList.forEach(anime => {
+            const animeCard = document.createElement('div');
+            animeCard.className = 'anime-card';
+
+            const title = anime.title_japanese || anime.title;
+            const imageUrl = anime.images.jpg.large_image_url;
+
+            animeCard.innerHTML = `
+                <img src="${imageUrl}" alt="${title}">
+                <div class="anime-info">
+                    <h3>${title}</h3>
+                    <p>⭐ ${anime.score || 'N/A'}</p>
+                </div>
+            `;
+            // Add click event to open mal_id link
+            animeCard.addEventListener('click', () => {
+                window.open(anime.url, '_blank');
+            });
+            resultsContainer.appendChild(animeCard);
+        });
+    };
+
+    const fetchData = async (endpoint) => {
+        loadingIndicator.style.display = 'block';
+        resultsContainer.innerHTML = '';
+        try {
+            const response = await fetch(`${API_BASE}${endpoint}`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+            return data.data;
+        } catch (error) {
+            console.error('API fetch error:', error);
+            resultsContainer.innerHTML = '<p>데이터를 불러오는 중 오류가 발생했습니다. 나중에 다시 시도해주세요.</p>';
+            return null;
+        } finally {
+            loadingIndicator.style.display = 'none';
         }
     };
 
-    themeToggleBtn.addEventListener('click', () => {
-        const isDarkMode = body.classList.contains('dark-mode');
-        const newTheme = isDarkMode ? 'light' : 'dark';
-        localStorage.setItem('theme', newTheme);
-        applyTheme(newTheme);
+    const searchAnime = async (query) => {
+        const animeList = await fetchData(`/anime?q=${encodeURIComponent(query)}&sfw`);
+        displayAnime(animeList);
+    };
+
+    const getTopAnime = async () => {
+        const animeList = await fetchData('/top/anime?filter=airing');
+        displayAnime(animeList);
+    };
+
+    searchForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const query = searchInput.value.trim();
+        if (query) {
+            searchAnime(query);
+        }
     });
 
-    // Load saved theme from localStorage
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    applyTheme(savedTheme);
+    siteTitle.addEventListener('click', () => {
+        searchInput.value = '';
+        getTopAnime();
+    });
 
-
-    // Lotto generator logic
-    const getNumberColor = (number) => {
-        if (number <= 10) return '#f39c12'; // 주황색
-        if (number <= 20) return '#3498db'; // 파란색
-        if (number <= 30) return '#e74c3c'; // 빨간색
-        if (number <= 40) return '#9b59b6'; // 보라색
-        return '#2ecc71'; // 녹색
-    };
-
-    const generateNumbers = () => {
-        generateBtn.disabled = true;
-        lottoNumbersDiv.innerHTML = '';
-        for (let i = 0; i < 6; i++) {
-            const placeholder = document.createElement('span');
-            placeholder.className = 'placeholder';
-            placeholder.textContent = '?';
-            lottoNumbersDiv.appendChild(placeholder);
-        }
-
-        const numbers = new Set();
-        while (numbers.size < 6) {
-            numbers.add(Math.floor(Math.random() * 45) + 1);
-        }
-        
-        const sortedNumbers = [...numbers].sort((a, b) => a - b);
-        
-        const placeholders = lottoNumbersDiv.querySelectorAll('.placeholder');
-
-        sortedNumbers.forEach((number, index) => {
-            setTimeout(() => {
-                const numberDiv = placeholders[index];
-                numberDiv.className = 'number';
-                numberDiv.textContent = number;
-                numberDiv.style.backgroundColor = getNumberColor(number);
-                numberDiv.style.transform = 'scale(0)';
-                requestAnimationFrame(() => {
-                    numberDiv.style.transform = 'scale(1)';
-                });
-            }, index * 300);
-        });
-        
-        setTimeout(() => {
-            generateBtn.disabled = false;
-        }, 6 * 300);
-    };
-
-    generateBtn.addEventListener('click', generateNumbers);
+    // Initial load
+    getTopAnime();
 });
