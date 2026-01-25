@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalCloseBtn = document.getElementById('modal-close-btn');
 
     const API_BASE = 'https://api.jikan.moe/v4';
+    const YOUTUBE_API_KEY = 'AIzaSyAssRCgZTTDcTgHM3Efa18bBXhXlxtTW8k'; // User provided API key
 
     // --- Modal Logic ---
     const openModal = () => modalOverlay.style.display = 'flex';
@@ -62,6 +63,25 @@ document.addEventListener('DOMContentLoaded', () => {
             animeCard.addEventListener('click', () => showDetails(anime.mal_id));
             container.appendChild(animeCard);
         });
+    };
+
+    const fetchYoutubeVideoId = async (query) => {
+        const YOUTUBE_SEARCH_URL = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(query)}&key=${YOUTUBE_API_KEY}&type=video&maxResults=1`;
+        try {
+            const response = await fetch(YOUTUBE_SEARCH_URL);
+            if (!response.ok) {
+                console.error('YouTube API error:', response.statusText);
+                return null;
+            }
+            const data = await response.json();
+            if (data.items && data.items.length > 0) {
+                return data.items[0].id.videoId;
+            }
+            return null;
+        } catch (error) {
+            console.error('Error fetching YouTube video:', error);
+            return null;
+        }
     };
 
     const showDetails = async (animeId) => {
@@ -134,6 +154,52 @@ document.addEventListener('DOMContentLoaded', () => {
                 modalContentHTML += `</div>`;
             }
         }
+
+        // YouTube Theme Songs
+        const themeOpenings = anime.theme.openings || [];
+        const themeEndings = anime.theme.endings || [];
+        let youtubeVideosHTML = '';
+
+        if (themeOpenings.length > 0 || themeEndings.length > 0) {
+            modalContentHTML += `<h3 class="modal-section-title">주제가</h3><div class="youtube-videos-section">`;
+            
+            const youtubePromises = [];
+            if (themeOpenings[0]) {
+                const opTitle = themeOpenings[0].replace(/#\d+:\s*/, ''); // Clean up "OP #1:" etc.
+                const query = `${anime.title} ${opTitle} opening`;
+                youtubePromises.push(fetchYoutubeVideoId(query).then(videoId => ({ type: 'opening', videoId, title: opTitle })));
+            }
+            if (themeEndings[0]) {
+                const edTitle = themeEndings[0].replace(/#\d+:\s*/, ''); // Clean up "ED #1:" etc.
+                const query = `${anime.title} ${edTitle} ending`;
+                youtubePromises.push(fetchYoutubeVideoId(query).then(videoId => ({ type: 'ending', videoId, title: edTitle })));
+            }
+
+            const results = await Promise.all(youtubePromises);
+
+            results.forEach(result => {
+                if (result.videoId) {
+                    youtubeVideosHTML += `
+                        <div class="youtube-player-container">
+                            <h4>${result.type === 'opening' ? '오프닝' : '엔딩'}: ${result.title}</h4>
+                            <iframe 
+                                src="https://www.youtube.com/embed/${result.videoId}?autoplay=0&rel=0"
+                                frameborder="0" 
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowfullscreen>
+                            </iframe>
+                        </div>
+                    `;
+                }
+            });
+
+            if (youtubeVideosHTML) {
+                modalContentHTML += youtubeVideosHTML + '</div>';
+            } else {
+                modalContentHTML += `<p>관련 YouTube 영상을 찾을 수 없습니다.</p></div>`;
+            }
+        }
+
 
         modalBody.innerHTML = modalContentHTML;
 
