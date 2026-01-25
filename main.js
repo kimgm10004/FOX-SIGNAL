@@ -101,12 +101,20 @@ document.addEventListener('DOMContentLoaded', () => {
         const synopsis = anime.synopsis ? anime.synopsis : '줄거리가 없습니다.';
         
         // Prepare additional info
+        const titles = [anime.title_english, anime.title_japanese, ...(anime.title_synonyms || [])]
+                        .filter(t => t && t !== anime.title)
+                        .join(', ') || 'N/A';
         const genres = anime.genres.map(g => g.name).join(', ') || 'N/A';
         const studios = anime.studios.map(s => s.name).join(', ') || 'N/A';
         const type = anime.type || 'N/A';
         const episodes = anime.episodes || 'N/A';
         const status = anime.status || 'N/A';
         const aired = anime.aired ? anime.aired.string : 'N/A';
+        const source = anime.source || 'N/A';
+        const duration = anime.duration || 'N/A';
+        const rating = anime.rating || 'N/A';
+        const broadcast = anime.broadcast.string || 'N/A';
+
 
         // Main Anime Info
         let modalContentHTML = `
@@ -114,6 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <img src="${anime.images.jpg.large_image_url}" alt="${anime.title}">
                 <div class="modal-info">
                     <h2>${anime.title_japanese || anime.title}</h2>
+                    ${titles !== 'N/A' ? `<p class="alt-titles"><strong>다른 제목:</strong> ${titles}</p>` : ''}
                     <div class="modal-stats">
                         <div class="stat">점수<span>⭐ ${anime.score || 'N/A'}</span></div>
                         <div class="stat">순위<span>#${anime.rank || 'N/A'}</span></div>
@@ -124,6 +133,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         <p><strong>에피소드:</strong> ${episodes}</p>
                         <p><strong>상태:</strong> ${status}</p>
                         <p><strong>방영:</strong> ${aired}</p>
+                        <p><strong>방송:</strong> ${broadcast}</p>
+                        <p><strong>원작:</strong> ${source}</p>
+                        <p><strong>시간:</strong> ${duration}</p>
+                        <p><strong>등급:</strong> ${rating}</p>
                         <p><strong>장르:</strong> ${genres}</p>
                         <p><strong>스튜디오:</strong> ${studios}</p>
                     </div>
@@ -194,7 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="youtube-player-container">
                             <h4>${result.type === 'opening' ? '오프닝' : '엔딩'}${result.index > 0 ? ` ${result.index + 1}` : ''}: ${result.title}</h4>
                             <iframe 
-                                src="https://www.youtube.com/embed/${result.videoId}?autoplay=0&rel=0"
+                                src="https://www.youtube.com/embed/${result.videoId}?autoplay=0&rel=0" 
                                 frameborder="0" 
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                 allowfullscreen>
