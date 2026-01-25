@@ -35,7 +35,7 @@ header {
 
 header h1 {
     color: var(--accent-color);
-    font-size: 2rem;
+    font-size: 2.2rem; /* Slightly increased */
     cursor: pointer;
 }
 
@@ -51,7 +51,8 @@ header h1 {
     background-color: var(--secondary-color);
     color: var(--text-color);
     outline: none;
-    width: 300px;
+    width: 250px; /* Adjusted for better responsiveness */
+    max-width: 300px;
 }
 
 #search-form button {
@@ -104,7 +105,7 @@ main {
 
 #results-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(225px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Adjusted minmax */
     gap: 20px;
 }
 
@@ -116,7 +117,7 @@ main {
     transition: transform 0.2s ease-in-out;
     cursor: pointer;
     flex-shrink: 0; /* Prevent cards from shrinking */
-    width: 225px; /* Fixed width for horizontal scrolling */
+    width: 200px; /* Adjusted fixed width for horizontal scrolling */
     margin-right: 20px;
 }
 
@@ -127,7 +128,7 @@ main {
 
 .anime-card img {
     width: 100%;
-    height: 320px;
+    height: 280px; /* Reduced height */
     object-fit: cover;
 }
 
@@ -285,7 +286,7 @@ main {
 
 .character-card {
     flex-shrink: 0;
-    width: 120px;
+    width: 110px; /* Reduced width */
     text-align: center;
     background-color: var(--secondary-color);
     border-radius: 8px;
@@ -294,8 +295,8 @@ main {
 }
 
 .character-card img {
-    width: 80px;
-    height: 80px;
+    width: 65px; /* Reduced size */
+    height: 65px; /* Reduced size */
     border-radius: 50%;
     object-fit: cover;
     margin-bottom: 5px;
@@ -303,7 +304,7 @@ main {
 }
 
 .character-card .character-name {
-    font-size: 0.9rem;
+    font-size: 0.85rem; /* Slightly reduced */
     font-weight: bold;
     color: var(--text-color);
     white-space: nowrap;
@@ -313,7 +314,7 @@ main {
 }
 
 .character-card .voice-actor {
-    font-size: 0.8rem;
+    font-size: 0.75rem; /* Slightly reduced */
     color: #a0a0b0;
     white-space: nowrap;
     overflow: hidden;
@@ -390,48 +391,25 @@ main {
     text-decoration: underline;
 }
 
-/* News Section Styles */
-.news-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
-}
-
-.news-item {
-    background-color: var(--card-bg);
-    border-radius: 8px;
-    padding: 15px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    transition: transform 0.2s ease-in-out;
-}
-
-.news-item:hover {
-    transform: translateY(-5px);
-}
-
-.news-item h3 {
-    font-size: 1.2rem;
-    margin-bottom: 10px;
-    color: var(--accent-color);
-}
-
-.news-item h3 a {
-    color: var(--accent-color);
-    text-decoration: none;
-}
-
-.news-item h3 a:hover {
-    text-decoration: underline;
-}
-
-.news-item p {
-    font-size: 0.9rem;
-    color: #a0a0b0;
-    line-height: 1.5;
-}
-
 
 @media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        gap: 10px;
+    }
+    #search-input {
+        width: 100%;
+        border-radius: 20px;
+    }
+    #search-form button {
+        border-radius: 20px;
+        margin-top: 10px;
+        width: 100%;
+    }
+    #search-form {
+        flex-direction: column;
+        width: 100%;
+    }
     .modal-grid {
         grid-template-columns: 1fr;
     }
@@ -440,6 +418,16 @@ main {
         margin: 0 auto 20px;
     }
     .youtube-videos-section {
+        grid-template-columns: 1fr;
+    }
+    .anime-card {
+        width: 100%;
+        margin-right: 0;
+    }
+    #results-grid {
+        grid-template-columns: 1fr;
+    }
+    .news-list {
         grid-template-columns: 1fr;
     }
 }

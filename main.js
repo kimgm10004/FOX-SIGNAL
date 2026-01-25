@@ -208,10 +208,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="youtube-player-container">
                             <h4>${result.type === 'opening' ? '오프닝' : '엔딩'}${result.index > 0 ? ` ${result.index + 1}` : ''}: ${result.title}</h4>
                             <iframe 
-                                src="https://www.youtube.com/embed/${result.videoId}?autoplay=0&rel=0" 
+                                src="https://www.youtube.com/embed/${result.videoId}?autoplay=0&rel=0"
                                 frameborder="0" 
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowfullscreen>
+                                allowfullscreen> 
                             </iframe>
                         </div>
                     `;
@@ -262,15 +262,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const fetchAnnNews = async () => {
         annNewsContainer.innerHTML = '<p>뉴스를 불러오는 중...</p>';
+        console.log('Fetching ANN news from:', ANN_RSS_URL); // Debugging
         try {
             const response = await fetch(`${CORS_PROXY_URL}${encodeURIComponent(ANN_RSS_URL)}`);
-            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            if (!response.ok) {
+                console.error('CORS proxy or ANN RSS fetch failed:', response.status, response.statusText); // Debugging
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
             const data = await response.json();
+            console.log('Raw data from CORS proxy:', data); // Debugging
+            
             const parser = new DOMParser();
             const xmlDoc = parser.parseFromString(data.contents, 'text/xml');
+            
+            // Check for XML parsing errors
+            if (xmlDoc.getElementsByTagName('parsererror').length > 0) {
+                console.error('XML parsing error:', xmlDoc.getElementsByTagName('parsererror')[0]); // Debugging
+                throw new Error('Failed to parse XML from RSS feed.');
+            }
+            
             const items = xmlDoc.querySelectorAll('item');
+            console.log('Parsed RSS items:', items); // Debugging
 
             annNewsContainer.innerHTML = ''; // Clear loading message
+
+            if (items.length === 0) {
+                annNewsContainer.innerHTML = '<p>최신 뉴스 없음.</p>';
+                return;
+            }
 
             items.slice(0, 10).forEach(item => {
                 const title = item.querySelector('title').textContent;
@@ -288,7 +307,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (error) {
             console.error('Error fetching ANN news:', error);
-            annNewsContainer.innerHTML = '<p>뉴스 데이터를 불러오는 데 실패했습니다.</p>';
+            annNewsContainer.innerHTML = `<p>뉴스 데이터를 불러오는 데 실패했습니다: ${error.message}.</p>`;
         }
     };
     
