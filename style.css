@@ -251,7 +251,7 @@ main {
 }
 
 /* Character Section Styles */
-.modal-info h3 {
+.modal-section-title { /* Added class for consistency */
     font-size: 1.5rem;
     color: var(--accent-color);
     margin-top: 30px;
@@ -318,6 +318,24 @@ main {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.additional-info {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    background-color: var(--secondary-color);
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.additional-info p {
+    margin: 5px 0;
+    font-size: 0.95rem;
+    color: var(--text-color);
+}
+
+.additional-info strong {
+    color: var(--accent-color);
 }
 
 

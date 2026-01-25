@@ -80,6 +80,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const synopsis = anime.synopsis ? anime.synopsis : '줄거리가 없습니다.';
         
+        // Prepare additional info
+        const genres = anime.genres.map(g => g.name).join(', ') || 'N/A';
+        const studios = anime.studios.map(s => s.name).join(', ') || 'N/A';
+        const type = anime.type || 'N/A';
+        const episodes = anime.episodes || 'N/A';
+        const status = anime.status || 'N/A';
+        const aired = anime.aired ? anime.aired.string : 'N/A';
+
         // Main Anime Info
         let modalContentHTML = `
             <div class="modal-grid">
@@ -90,6 +98,14 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="stat">점수<span>⭐ ${anime.score || 'N/A'}</span></div>
                         <div class="stat">순위<span>#${anime.rank || 'N/A'}</span></div>
                         <div class="stat">인기<span>#${anime.popularity || 'N/A'}</span></div>
+                    </div>
+                    <div class="additional-info">
+                        <p><strong>유형:</strong> ${type}</p>
+                        <p><strong>에피소드:</strong> ${episodes}</p>
+                        <p><strong>상태:</strong> ${status}</p>
+                        <p><strong>방영:</strong> ${aired}</p>
+                        <p><strong>장르:</strong> ${genres}</p>
+                        <p><strong>스튜디오:</strong> ${studios}</p>
                     </div>
                     <p class="synopsis">${synopsis.replace(/\n/g, '<br>')}</p>
                     <button id="translate-btn" class="translate-button">한국어로 번역</button>
@@ -102,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const mainCharacters = charactersData.filter(char => char.role === 'Main');
             if (mainCharacters.length > 0) {
                 modalContentHTML += `
-                    <h3>주요 등장인물</h3>
+                    <h3 class="modal-section-title">주요 등장인물</h3>
                     <div class="characters-row">
                 `;
                 mainCharacters.forEach(char => {
@@ -128,11 +144,10 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // --- API Fetching ---
-    const fetchData = async (endpoint, limit = 10) => { // Removed limit from global fetchData
+    const fetchData = async (endpoint, limit = 10) => {
         loadingIndicator.style.display = 'block';
         try {
             const url = `${API_BASE}${endpoint}${endpoint.includes('?') ? '&' : '?'}limit=${limit}&sfw`;
-            // If the endpoint is for characters or full details, limit might not be applicable or need a different approach
             const finalUrl = endpoint.includes('/characters') || endpoint.includes('/full') ? `${API_BASE}${endpoint}` : url;
             const response = await fetch(finalUrl);
             if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
