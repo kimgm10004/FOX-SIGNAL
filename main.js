@@ -211,7 +211,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 src="https://www.youtube.com/embed/${result.videoId}?autoplay=0&rel=0"
                                 frameborder="0" 
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowfullscreen> 
+                                allowfullscreen>
                             </iframe>
                         </div>
                     `;
@@ -257,16 +257,17 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // --- ANN News Fetching ---
-    const ANN_RSS_URL = 'https://www.animenewsnetwork.com/all/rss.xml';
+    // Changed from RSS to ANN Encyclopedia API
+    const ANN_API_URL = 'https://cdn.animenewsnetwork.com/encyclopedia/reports.xml?id=155&type=anime&nlist=10'; // Report for all anime
     const CORS_PROXY_URL = 'https://api.allorigins.win/get?url='; // Public CORS proxy
 
     const fetchAnnNews = async () => {
-        annNewsContainer.innerHTML = '<p>뉴스를 불러오는 중...</p>';
-        console.log('Fetching ANN news from:', ANN_RSS_URL); // Debugging
+        annNewsContainer.innerHTML = '<p>데이터를 불러오는 중...</p>';
+        console.log('Fetching ANN data from:', ANN_API_URL); // Debugging
         try {
-            const response = await fetch(`${CORS_PROXY_URL}${encodeURIComponent(ANN_RSS_URL)}`);
+            const response = await fetch(`${CORS_PROXY_URL}${encodeURIComponent(ANN_API_URL)}`);
             if (!response.ok) {
-                console.error('CORS proxy or ANN RSS fetch failed:', response.status, response.statusText); // Debugging
+                console.error('CORS proxy or ANN API fetch failed:', response.status, response.statusText); // Debugging
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const data = await response.json();
@@ -276,38 +277,43 @@ document.addEventListener('DOMContentLoaded', () => {
             const xmlDoc = parser.parseFromString(data.contents, 'text/xml');
             
             // Check for XML parsing errors
-            if (xmlDoc.getElementsByTagName('parsererror').length > 0) {
-                console.error('XML parsing error:', xmlDoc.getElementsByTagName('parsererror')[0]); // Debugging
-                throw new Error('Failed to parse XML from RSS feed.');
+            if (xmlDoc.getElementsByTagName('parsererror').length > 0 || xmlDoc.documentElement.nodeName === 'parsererror') {
+                console.error('XML parsing error:', xmlDoc.documentElement); // Debugging
+                throw new Error('Failed to parse XML from ANN API response. Check console for details.');
             }
             
-            const items = xmlDoc.querySelectorAll('item');
-            console.log('Parsed RSS items:', items); // Debugging
+            // ANN Reports API structure is different from RSS. It has <report><item><anime>...</anime></item></report>
+            // Or directly <anime> elements within <report>
+            const animeItems = xmlDoc.querySelectorAll('anime'); // Assuming <anime> elements directly within the report
+            console.log('Parsed ANN anime items:', animeItems); // Debugging
 
             annNewsContainer.innerHTML = ''; // Clear loading message
 
-            if (items.length === 0) {
-                annNewsContainer.innerHTML = '<p>최신 뉴스 없음.</p>';
+            if (animeItems.length === 0) {
+                annNewsContainer.innerHTML = '<p>최신 애니메이션 정보를 찾을 수 없습니다.</p>';
                 return;
             }
 
-            items.slice(0, 10).forEach(item => {
-                const title = item.querySelector('title').textContent;
-                const link = item.querySelector('link').textContent;
-                const pubDate = new Date(item.querySelector('pubDate').textContent).toLocaleDateString('ko-KR');
+            animeItems.slice(0, 10).forEach(animeItem => {
+                const titleElement = animeItem.querySelector('info[type="Main title"]');
+                const title = titleElement ? titleElement.textContent : '제목 없음';
+                
+                // Constructing a link to ANN encyclopedia page for the anime
+                const annId = animeItem.getAttribute('id');
+                const link = annId ? `https://www.animenewsnetwork.com/encyclopedia/anime.php?id=${annId}` : '#';
 
                 const newsItemDiv = document.createElement('div');
-                newsItemDiv.className = 'news-item';
+                newsItemDiv.className = 'news-item'; // Reusing news-item class for styling
                 newsItemDiv.innerHTML = `
                     <h3><a href="${link}" target="_blank">${title}</a></h3>
-                    <p>${pubDate}</p>
+                    <p>ANN 백과사전</p>
                 `;
                 annNewsContainer.appendChild(newsItemDiv);
             });
 
         } catch (error) {
-            console.error('Error fetching ANN news:', error);
-            annNewsContainer.innerHTML = `<p>뉴스 데이터를 불러오는 데 실패했습니다: ${error.message}.</p>`;
+            console.error('Error fetching ANN data:', error);
+            annNewsContainer.innerHTML = `<p>애니메이션 데이터를 불러오는 데 실패했습니다: ${error.message}.</p>`;
         }
     };
     
