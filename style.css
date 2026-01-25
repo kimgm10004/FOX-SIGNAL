@@ -1,31 +1,72 @@
 @import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700&display=swap');
 
+:root {
+    --bg-color: #f2f2f2;
+    --text-color: #333;
+    --container-bg: white;
+    --container-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    --h1-color: #2c3e50;
+    --p-color: #7f8c8d;
+    --placeholder-bg: #bdc3c7;
+    --placeholder-text: #ecf0f1;
+    --btn-bg: #3498db;
+    --btn-hover-bg: #2980b9;
+}
+
 body {
     font-family: 'Nanum Gothic', sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background-color: #f2f2f2;
+    background-color: var(--bg-color);
     margin: 0;
-    color: #333;
+    color: var(--text-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
+
+body.dark-mode {
+    --bg-color: #2c3e50;
+    --text-color: #ecf0f1;
+    --container-bg: #34495e;
+    --container-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    --h1-color: #ecf0f1;
+    --p-color: #bdc3c7;
+    --placeholder-bg: #7f8c8d;
+    --placeholder-text: #95a5a6;
+    --btn-bg: #5fa8d3;
+    --btn-hover-bg: #4a90c2;
+}
+
 
 .container {
     text-align: center;
-    background-color: white;
+    background-color: var(--container-bg);
     padding: 40px;
     border-radius: 15px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--container-shadow);
+    transition: background-color 0.3s ease;
+    position: relative;
+}
+
+#theme-toggle {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+    font-size: 24px;
+    border: none;
+    background: none;
+    color: var(--text-color);
 }
 
 h1 {
-    color: #2c3e50;
+    color: var(--h1-color);
     margin-bottom: 10px;
 }
 
 p {
-    color: #7f8c8d;
+    color: var(--p-color);
     margin-bottom: 30px;
 }
 
@@ -52,8 +93,12 @@ p {
 }
 
 .placeholder {
-    background-color: #bdc3c7;
-    color: #ecf0f1;
+    background-color: var(--placeholder-bg);
+    color: var(--placeholder-text);
+}
+
+.number {
+     color: white; /* Number color is set via JS, but good to have a default */
 }
 
 .number:hover {
@@ -68,14 +113,14 @@ p {
     cursor: pointer;
     border: none;
     border-radius: 10px;
-    background-color: #3498db;
+    background-color: var(--btn-bg);
     color: white;
     transition: background-color 0.3s ease, transform 0.2s ease;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
 #generate-btn:hover {
-    background-color: #2980b9;
+    background-color: var(--btn-hover-bg);
 }
 
 #generate-btn:active {

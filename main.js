@@ -1,7 +1,33 @@
 document.addEventListener('DOMContentLoaded', () => {
     const lottoNumbersDiv = document.getElementById('lotto-numbers');
     const generateBtn = document.getElementById('generate-btn');
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    const body = document.body;
 
+    // Theme switcher logic
+    const applyTheme = (theme) => {
+        if (theme === 'dark') {
+            body.classList.add('dark-mode');
+            themeToggleBtn.textContent = '☀️';
+        } else {
+            body.classList.remove('dark-mode');
+            themeToggleBtn.textContent = '🌙';
+        }
+    };
+
+    themeToggleBtn.addEventListener('click', () => {
+        const isDarkMode = body.classList.contains('dark-mode');
+        const newTheme = isDarkMode ? 'light' : 'dark';
+        localStorage.setItem('theme', newTheme);
+        applyTheme(newTheme);
+    });
+
+    // Load saved theme from localStorage
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    applyTheme(savedTheme);
+
+
+    // Lotto generator logic
     const getNumberColor = (number) => {
         if (number <= 10) return '#f39c12'; // 주황색
         if (number <= 20) return '#3498db'; // 파란색
