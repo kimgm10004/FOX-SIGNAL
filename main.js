@@ -304,7 +304,7 @@ document.addEventListener('DOMContentLoaded', () => {
         displayAnime(popularData, topPopularContainer);
         displayAnime(newData, newAnimeContainer);
         displayAnime(ratedData, topRatedContainer);
-        fetchRandomQuote(); // Call fetchRandomQuote here
+        // fetchRandomQuote(); // Call fetchRandomQuote here - Temporarily commented out for debugging
     };
 
     searchForm.addEventListener('submit', (e) => {
@@ -360,7 +360,7 @@ document.addEventListener('DOMContentLoaded', () => {
         window.open(kakaoWebtoonLink.href, 'kakao-webtoon-popup', 'width=800,height=600');
     });
 
-    const quoteContainer = document.getElementById('quote-container');
+    const quoteContainer = document.getElementById('quote-container'); // Moved declaration
 
     const fetchRandomQuote = async () => {
         try {
