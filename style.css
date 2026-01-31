@@ -545,6 +545,80 @@ footer a:hover {
 }
 
 
+.post-meta {
+    font-size: 0.85rem;
+    color: #a0a0b0;
+    margin-bottom: 10px;
+}
+
+.read-more {
+    display: inline-block;
+    margin-top: 10px;
+    color: var(--accent-color);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.read-more:hover {
+    text-decoration: underline;
+}
+
+.blog-link {
+    display: inline-block;
+    padding: 10px 20px;
+    margin-left: 10px;
+    background-color: #6c757d; /* Grey color */
+    color: white;
+    text-decoration: none;
+    border-radius: 20px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.blog-link:hover {
+    background-color: #5a6268; /* Darker grey on hover */
+}
+
+.blog-posts-container {
+    background-color: var(--card-bg);
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.blog-posts-container p {
+    margin-bottom: 10px;
+}
+
+.blog-link-main {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 10px 20px;
+    background-color: var(--accent-color);
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.blog-link-main:hover {
+    background-color: #c9304c;
+}
+
+.blog-post-card {
+    background-color: var(--secondary-color);
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.blog-post-card h3 {
+    color: var(--accent-color);
+    margin-bottom: 5px;
+}
+
+
 @media (max-width: 768px) {
     header {
         flex-direction: column;
