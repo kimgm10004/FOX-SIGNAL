@@ -236,6 +236,22 @@ document.addEventListener('DOMContentLoaded', () => {
             const googleTranslateUrl = `https://translate.google.com/?sl=auto&tl=ko&text=${encodeURIComponent(synopsis)}&op=translate`;
             window.open(googleTranslateUrl, '_blank');
         });
+
+        // Add LiveRe Comments
+        const commentsSection = document.createElement('div');
+        commentsSection.innerHTML = `
+            <h3 class="modal-section-title">댓글</h3>
+            <livere-comment client-id="nF1ZelFhyRrWeseuliAS" url="${window.location.origin + window.location.pathname + '?animeId=' + animeId}"></livere-comment>
+        `;
+        modalBody.appendChild(commentsSection);
+
+        // Load LiveRe script if not already loaded
+        if (!document.querySelector('script[src="https://www.livere.org/livere-widget.js"]')) {
+            const script = document.createElement('script');
+            script.type = 'module';
+            script.src = 'https://www.livere.org/livere-widget.js';
+            document.head.appendChild(script);
+        }
     };
 
     // --- API Fetching ---
