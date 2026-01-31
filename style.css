@@ -618,6 +618,22 @@ footer a:hover {
     margin-bottom: 5px;
 }
 
+.webtoon-link {
+    display: inline-block;
+    padding: 10px 20px;
+    margin-left: 10px;
+    background-color: #008080; /* Teal color */
+    color: white;
+    text-decoration: none;
+    border-radius: 20px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.webtoon-link:hover {
+    background-color: #006666; /* Darker teal on hover */
+}
+
 
 @media (max-width: 768px) {
     header {

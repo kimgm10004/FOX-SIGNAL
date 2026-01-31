@@ -345,6 +345,18 @@ document.addEventListener('DOMContentLoaded', () => {
         window.open(ostLink.href, 'ost-popup', 'width=800,height=600');
     });
 
+    const naverWebtoonLink = document.getElementById('naver-webtoon-link');
+    naverWebtoonLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.open(naverWebtoonLink.href, 'naver-webtoon-popup', 'width=800,height=600');
+    });
+
+    const kakaoWebtoonLink = document.getElementById('kakao-webtoon-link');
+    kakaoWebtoonLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.open(kakaoWebtoonLink.href, 'kakao-webtoon-popup', 'width=800,height=600');
+    });
+
     // Initial load
     loadInitialSections();
 });
