@@ -211,8 +211,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 src="https://www.youtube.com/embed/${result.videoId}?autoplay=0&rel=0"
                                 frameborder="0" 
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowfullscreen>
-                            </iframe>
+                                allowfullscreen></iframe>
                         </div>
                     `;
                 } else {
