@@ -22,19 +22,26 @@
             <a href="https://www.youtube.com/results?search_query=%EC%95%A0%EB%8B%88%EB%A9%94%EC%9D%B4%EC%85%98+OST" target="_blank" id="ost-link" class="ost-link">OST 듣기</a>
         </form>
         <!-- AdSense Header Ad -->
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-client="ca-pub-3813668346586591"
-             data-ad-slot="1234567890"
-             data-ad-format="auto"
-             data-full-width-responsive="true"></ins>
-        <script>
-             (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
+        <div class="ad-container">
+            <h5>광고</h5>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-3813668346586591"
+                 data-ad-slot="1234567890"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
     </header>
 
     <main>
         <div id="sections-container">
+            <section class="anime-section">
+                <h2>🎲 오늘의 랜덤 애니</h2>
+                <div class="anime-row" id="random-anime-container"></div>
+            </section>
             <section class="anime-section">
                 <h2>🏆 인기 TOP 10</h2>
                 <div class="anime-row" id="top-popular-container"></div>
@@ -45,7 +52,8 @@
             </section>
 
             <!-- AdSense In-Feed Ad -->
-            <section class="anime-section">
+            <section class="anime-section ad-container">
+                <h5>광고</h5>
               <ins class="adsbygoogle"
                    style="display:block"
                    data-ad-client="ca-pub-3813668346586591"
@@ -86,6 +94,11 @@
             </div>
         </div>
     </div>
+
+    <footer>
+        <p>&copy; 2026 AniSearch. All Rights Reserved.</p>
+        <a href="about.html">About</a> | <a href="privacy.html">Privacy Policy</a>
+    </footer>
 
     <script src="main.js"></script>
 </body>

@@ -486,6 +486,33 @@ main {
     color: var(--accent-color);
 }
 
+footer {
+    text-align: center;
+    padding: 20px;
+    margin-top: 40px;
+    background-color: var(--primary-color);
+}
+
+footer a {
+    color: var(--accent-color);
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+.ad-container {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.ad-container h5 {
+    margin-bottom: 5px;
+    color: #888;
+    font-size: 0.8rem;
+}
+
 
 @media (max-width: 768px) {
     header {

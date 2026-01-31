@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const sectionsContainer = document.getElementById('sections-container');
     const searchResultsContainer = document.getElementById('search-results-container');
     const resultsGrid = document.getElementById('results-grid');
+    const randomAnimeContainer = document.getElementById('random-anime-container');
     const topPopularContainer = document.getElementById('top-popular-container');
     const newAnimeContainer = document.getElementById('new-anime-container');
     const topRatedContainer = document.getElementById('top-rated-container');
@@ -242,7 +243,7 @@ document.addEventListener('DOMContentLoaded', () => {
         loadingIndicator.style.display = 'block';
         try {
             const url = `${API_BASE}${endpoint}${endpoint.includes('?') ? '&' : '?'}limit=${limit}&sfw`;
-            const finalUrl = endpoint.includes('/characters') || endpoint.includes('/full') ? `${API_BASE}${endpoint}` : url;
+            const finalUrl = endpoint.includes('/characters') || endpoint.includes('/full') || endpoint.includes('/random') ? `${API_BASE}${endpoint}` : url;
             const response = await fetch(finalUrl);
             if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
             const data = await response.json();
@@ -269,12 +270,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const loadInitialSections = async () => {
         showSearchResults(false);
+        const randomAnime = fetchData('/random/anime');
         const topPopular = fetchData('/top/anime?filter=bypopularity&limit=10');
         const newAnime = fetchData('/seasons/now?limit=10');
         const topRated = fetchData('/top/anime?filter=favorite&limit=10');
         
-        const [popularData, newData, ratedData] = await Promise.all([topPopular, newAnime, topRated]);
+        const [randomData, popularData, newData, ratedData] = await Promise.all([randomAnime, topPopular, newAnime, topRated]);
         
+        if (randomData) {
+            displayAnime([randomData], randomAnimeContainer);
+        }
         displayAnime(popularData, topPopularContainer);
         displayAnime(newData, newAnimeContainer);
         displayAnime(ratedData, topRatedContainer);
