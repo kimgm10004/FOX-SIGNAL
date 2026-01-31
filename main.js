@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const topPopularContainer = document.getElementById('top-popular-container');
     const newAnimeContainer = document.getElementById('new-anime-container');
     const topRatedContainer = document.getElementById('top-rated-container');
-    const annNewsContainer = document.getElementById('ann-news-container'); // New News Container
 
     // Controls
     const searchForm = document.getElementById('search-form');
@@ -256,67 +255,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // --- ANN News Fetching ---
-    // Changed from RSS to ANN Encyclopedia API
-    const ANN_API_URL = 'https://cdn.animenewsnetwork.com/encyclopedia/reports.xml?id=155&type=anime&nlist=10'; // Report for all anime
-    const CORS_PROXY_URL = 'https://api.allorigins.win/get?url='; // Public CORS proxy
-
-    const fetchAnnNews = async () => {
-        annNewsContainer.innerHTML = '<p>데이터를 불러오는 중...</p>';
-        console.log('Fetching ANN data from:', ANN_API_URL); // Debugging
-        try {
-            const response = await fetch(`${CORS_PROXY_URL}${encodeURIComponent(ANN_API_URL)}`);
-            if (!response.ok) {
-                console.error('CORS proxy or ANN API fetch failed:', response.status, response.statusText); // Debugging
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const data = await response.json();
-            console.log('Raw data from CORS proxy:', data); // Debugging
-            
-            const parser = new DOMParser();
-            const xmlDoc = parser.parseFromString(data.contents, 'text/xml');
-            
-            // Check for XML parsing errors
-            if (xmlDoc.getElementsByTagName('parsererror').length > 0 || xmlDoc.documentElement.nodeName === 'parsererror') {
-                console.error('XML parsing error:', xmlDoc.documentElement); // Debugging
-                throw new Error('Failed to parse XML from ANN API response. Check console for details.');
-            }
-            
-            // ANN Reports API structure is different from RSS. It has <report><item><anime>...</anime></item></report>
-            // Or directly <anime> elements within <report>
-            const animeItems = xmlDoc.querySelectorAll('anime'); // Assuming <anime> elements directly within the report
-            console.log('Parsed ANN anime items:', animeItems); // Debugging
-
-            annNewsContainer.innerHTML = ''; // Clear loading message
-
-            if (animeItems.length === 0) {
-                annNewsContainer.innerHTML = '<p>최신 애니메이션 정보를 찾을 수 없습니다.</p>';
-                return;
-            }
-
-            animeItems.slice(0, 10).forEach(animeItem => {
-                const titleElement = animeItem.querySelector('info[type="Main title"]');
-                const title = titleElement ? titleElement.textContent : '제목 없음';
-                
-                // Constructing a link to ANN encyclopedia page for the anime
-                const annId = animeItem.getAttribute('id');
-                const link = annId ? `https://www.animenewsnetwork.com/encyclopedia/anime.php?id=${annId}` : '#';
-
-                const newsItemDiv = document.createElement('div');
-                newsItemDiv.className = 'news-item'; // Reusing news-item class for styling
-                newsItemDiv.innerHTML = `
-                    <h3><a href="${link}" target="_blank">${title}</a></h3>
-                    <p>ANN 백과사전</p>
-                `;
-                annNewsContainer.appendChild(newsItemDiv);
-            });
-
-        } catch (error) {
-            console.error('Error fetching ANN data:', error);
-            annNewsContainer.innerHTML = `<p>애니메이션 데이터를 불러오는 데 실패했습니다: ${error.message}.</p>`;
-        }
-    };
-    
     // --- Page Control ---
     const showSearchResults = (show) => {
         searchResultsContainer.style.display = show ? 'block' : 'none';
@@ -340,8 +278,6 @@ document.addEventListener('DOMContentLoaded', () => {
         displayAnime(popularData, topPopularContainer);
         displayAnime(newData, newAnimeContainer);
         displayAnime(ratedData, topRatedContainer);
-        
-        fetchAnnNews(); // Fetch ANN News on initial load
     };
 
     searchForm.addEventListener('submit', (e) => {
@@ -353,6 +289,36 @@ document.addEventListener('DOMContentLoaded', () => {
     siteTitle.addEventListener('click', () => {
         searchInput.value = '';
         showSearchResults(false);
+    });
+
+    const laftelLink = document.getElementById('laftel-link');
+    laftelLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.open(laftelLink.href, 'laftel-popup', 'width=800,height=600');
+    });
+
+    const figureLink = document.getElementById('figure-link');
+    figureLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.open(figureLink.href, 'figure-popup', 'width=800,height=600');
+    });
+
+    const communityLink = document.getElementById('community-link');
+    communityLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.open(communityLink.href, 'community-popup', 'width=800,height=600');
+    });
+
+    const novelLink = document.getElementById('novel-link');
+    novelLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.open(novelLink.href, 'novel-popup', 'width=800,height=600');
+    });
+
+    const ostLink = document.getElementById('ost-link');
+    ostLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.open(ostLink.href, 'ost-popup', 'width=800,height=600');
     });
 
     // Initial load

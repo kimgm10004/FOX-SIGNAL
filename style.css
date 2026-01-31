@@ -391,6 +391,101 @@ main {
     text-decoration: underline;
 }
 
+.laftel-link {
+    display: inline-block;
+    padding: 10px 20px;
+    margin-left: 10px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 20px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.laftel-link:hover {
+    background-color: #0056b3;
+}
+
+.figure-link {
+    display: inline-block;
+    padding: 10px 20px;
+    margin-left: 10px;
+    background-color: #28a745; /* Green color */
+    color: white;
+    text-decoration: none;
+    border-radius: 20px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.figure-link:hover {
+    background-color: #218838; /* Darker green on hover */
+}
+
+.community-link {
+    display: inline-block;
+    padding: 10px 20px;
+    margin-left: 10px;
+    background-color: #ffc107; /* Orange color */
+    color: #212529; /* Dark text for contrast */
+    text-decoration: none;
+    border-radius: 20px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.community-link:hover {
+    background-color: #e0a800; /* Darker orange on hover */
+}
+
+.novel-link {
+    display: inline-block;
+    padding: 10px 20px;
+    margin-left: 10px;
+    background-color: #6f42c1; /* Purple color */
+    color: white;
+    text-decoration: none;
+    border-radius: 20px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.novel-link:hover {
+    background-color: #5a2eac; /* Darker purple on hover */
+}
+
+.ost-link {
+    display: inline-block;
+    padding: 10px 20px;
+    margin-left: 10px;
+    background-color: #e83e8c; /* Pink color */
+    color: white;
+    text-decoration: none;
+    border-radius: 20px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.ost-link:hover {
+    background-color: #d62c7e; /* Darker pink on hover */
+}
+
+.news-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    transition: transform 0.2s ease-in-out;
+}
+
+.news-link:hover {
+    transform: scale(1.02);
+}
+
+.news-link h2 {
+    color: var(--accent-color);
+}
+
 
 @media (max-width: 768px) {
     header {
