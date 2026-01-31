@@ -236,8 +236,9 @@ document.addEventListener('DOMContentLoaded', () => {
         (adsbygoogle = window.adsbygoogle || []).push({});
 
         document.getElementById('translate-btn').addEventListener('click', () => {
-            const googleTranslateUrl = `https://translate.google.com/?sl=auto&tl=ko&text=${encodeURIComponent(synopsis)}&op=translate`;
-            window.open(googleTranslateUrl, '_blank');
+            // Papago does not support direct URL-based text pre-fill like Google Translate
+            window.open('https://papago.naver.com/', '_blank');
+            alert('파파고 웹사이트로 이동합니다. 번역할 텍스트를 직접 복사하여 붙여넣어 주세요.');
         });
 
         // Add LiveRe Comments
