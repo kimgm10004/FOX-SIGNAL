@@ -232,6 +232,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         modalBody.innerHTML = modalContentHTML;
 
+        // Push AdSense ads in the modal
+        (adsbygoogle = window.adsbygoogle || []).push({});
+
         document.getElementById('translate-btn').addEventListener('click', () => {
             const googleTranslateUrl = `https://translate.google.com/?sl=auto&tl=ko&text=${encodeURIComponent(synopsis)}&op=translate`;
             window.open(googleTranslateUrl, '_blank');
