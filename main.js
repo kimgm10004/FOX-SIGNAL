@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const topPopularContainer = document.getElementById('top-popular-container');
     const newAnimeContainer = document.getElementById('new-anime-container');
     const topRatedContainer = document.getElementById('top-rated-container');
+    const quoteContainer = document.getElementById('quote-container'); // Moved declaration
 
     // Controls
     const searchForm = document.getElementById('search-form');
@@ -303,6 +304,7 @@ document.addEventListener('DOMContentLoaded', () => {
         displayAnime(popularData, topPopularContainer);
         displayAnime(newData, newAnimeContainer);
         displayAnime(ratedData, topRatedContainer);
+        fetchRandomQuote(); // Call fetchRandomQuote here
     };
 
     searchForm.addEventListener('submit', (e) => {
@@ -357,6 +359,23 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         window.open(kakaoWebtoonLink.href, 'kakao-webtoon-popup', 'width=800,height=600');
     });
+
+    const quoteContainer = document.getElementById('quote-container');
+
+    const fetchRandomQuote = async () => {
+        try {
+            const response = await fetch('https://animechan.vercel.app/api/random');
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            const data = await response.json();
+            quoteContainer.innerHTML = `
+                <p>"${data.quote}"</p>
+                <p>– ${data.character} (${data.anime})</p>
+            `;
+        } catch (error) {
+            console.error('Error fetching random quote:', error);
+            quoteContainer.innerHTML = '<p>명대사를 불러오는 데 실패했습니다.</p>';
+        }
+    };
 
     // Initial load
     loadInitialSections();
