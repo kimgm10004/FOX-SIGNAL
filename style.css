@@ -7,6 +7,7 @@
     --accent-color: #e94560;
     --text-color: #dcdcdc;
     --card-bg: #1e1e3f;
+    --text-muted: #a0a0b0;
 }
 
 * {
@@ -66,6 +67,15 @@ header h1 {
     font-weight: bold;
 }
 
+.main-nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end; /* Align links to the right */
+    align-items: center;
+    gap: 10px; /* Space between links */
+    margin-top: 10px; /* Adjust spacing from search form if needed */
+}
+
 main {
     padding: 20px;
 }
@@ -91,14 +101,17 @@ main {
 }
 
 /* Custom Scrollbar */
-.anime-row::-webkit-scrollbar {
+.anime-row::-webkit-scrollbar,
+.characters-row::-webkit-scrollbar {
     height: 8px;
 }
-.anime-row::-webkit-scrollbar-track {
+.anime-row::-webkit-scrollbar-track,
+.characters-row::-webkit-scrollbar-track {
     background: var(--secondary-color);
     border-radius: 4px;
 }
-.anime-row::-webkit-scrollbar-thumb {
+.anime-row::-webkit-scrollbar-thumb,
+.characters-row::-webkit-scrollbar-thumb {
     background: var(--accent-color);
     border-radius: 4px;
 }
@@ -146,7 +159,7 @@ main {
 
 .anime-info p {
     font-size: 0.9rem;
-    color: #a0a0b0;
+    color: var(--text-muted);
 }
 
 #loading {
@@ -272,17 +285,7 @@ main {
     scrollbar-color: var(--accent-color) var(--secondary-color);
 }
 
-.characters-row::-webkit-scrollbar {
-    height: 8px;
-}
-.characters-row::-webkit-scrollbar-track {
-    background: var(--secondary-color);
-    border-radius: 4px;
-}
-.characters-row::-webkit-scrollbar-thumb {
-    background: var(--accent-color);
-    border-radius: 4px;
-}
+
 
 .character-card {
     flex-shrink: 0;
@@ -315,7 +318,7 @@ main {
 
 .character-card .voice-actor {
     font-size: 0.75rem; /* Slightly reduced */
-    color: #a0a0b0;
+    color: var(--text-muted);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -391,16 +394,20 @@ main {
     text-decoration: underline;
 }
 
-.laftel-link {
+/* Common button-like link styles */
+.action-link {
     display: inline-block;
     padding: 10px 20px;
-    margin-left: 10px;
-    background-color: #007bff;
+    margin-left: 10px; /* Some links have this, some don't, will need to adjust individually */
     color: white;
     text-decoration: none;
-    border-radius: 20px;
+    border-radius: 20px; /* Most have this */
     font-weight: bold;
     transition: background-color 0.3s ease;
+}
+
+.laftel-link {
+    background-color: #007bff;
 }
 
 .laftel-link:hover {
@@ -408,15 +415,7 @@ main {
 }
 
 .figure-link {
-    display: inline-block;
-    padding: 10px 20px;
-    margin-left: 10px;
     background-color: #28a745; /* Green color */
-    color: white;
-    text-decoration: none;
-    border-radius: 20px;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
 }
 
 .figure-link:hover {
@@ -424,15 +423,8 @@ main {
 }
 
 .community-link {
-    display: inline-block;
-    padding: 10px 20px;
-    margin-left: 10px;
     background-color: #ffc107; /* Orange color */
     color: #212529; /* Dark text for contrast */
-    text-decoration: none;
-    border-radius: 20px;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
 }
 
 .community-link:hover {
@@ -440,15 +432,7 @@ main {
 }
 
 .novel-link {
-    display: inline-block;
-    padding: 10px 20px;
-    margin-left: 10px;
     background-color: #6f42c1; /* Purple color */
-    color: white;
-    text-decoration: none;
-    border-radius: 20px;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
 }
 
 .novel-link:hover {
@@ -456,15 +440,7 @@ main {
 }
 
 .ost-link {
-    display: inline-block;
-    padding: 10px 20px;
-    margin-left: 10px;
     background-color: #e83e8c; /* Pink color */
-    color: white;
-    text-decoration: none;
-    border-radius: 20px;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
 }
 
 .ost-link:hover {
@@ -547,7 +523,7 @@ footer a:hover {
 
 .post-meta {
     font-size: 0.85rem;
-    color: #a0a0b0;
+    color: var(--text-muted);
     margin-bottom: 10px;
 }
 
@@ -564,15 +540,7 @@ footer a:hover {
 }
 
 .blog-link {
-    display: inline-block;
-    padding: 10px 20px;
-    margin-left: 10px;
     background-color: #6c757d; /* Grey color */
-    color: white;
-    text-decoration: none;
-    border-radius: 20px;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
 }
 
 .blog-link:hover {
@@ -590,15 +558,10 @@ footer a:hover {
 }
 
 .blog-link-main {
-    display: inline-block;
-    margin-top: 15px;
-    padding: 10px 20px;
     background-color: var(--accent-color);
-    color: white;
-    text-decoration: none;
-    border-radius: 5px;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
+    border-radius: 5px; /* Keep its specific border-radius */
+    margin-left: 0; /* Override default margin-left from .action-link */
+    margin-top: 15px; /* Keep its specific margin-top */
 }
 
 .blog-link-main:hover {
@@ -619,15 +582,7 @@ footer a:hover {
 }
 
 .webtoon-link {
-    display: inline-block;
-    padding: 10px 20px;
-    margin-left: 10px;
     background-color: #008080; /* Teal color */
-    color: white;
-    text-decoration: none;
-    border-radius: 20px;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
 }
 
 .webtoon-link:hover {
@@ -652,6 +607,17 @@ footer a:hover {
     #search-form {
         flex-direction: column;
         width: 100%;
+    }
+    .main-nav { /* Add responsive styles for main-nav */
+        flex-direction: column; /* Stack links vertically */
+        width: 100%;
+        margin-left: 0; /* Remove default margin-left from action-link */
+        gap: 5px; /* Adjust gap for vertical stacking */
+    }
+    .main-nav .action-link {
+        margin-left: 0; /* Ensure links fill width */
+        width: 100%;
+        text-align: center; /* Center text in links */
     }
     .modal-grid {
         grid-template-columns: 1fr;

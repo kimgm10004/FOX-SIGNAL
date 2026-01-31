@@ -20,6 +20,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalBody = document.getElementById('modal-body');
     const modalCloseBtn = document.getElementById('modal-close-btn');
 
+    // New functions for managing global loading indicator
+    const showGlobalLoading = () => {
+        loadingIndicator.style.display = 'block';
+    };
+
+    const hideGlobalLoading = () => {
+        loadingIndicator.style.display = 'none';
+    };
+
     const API_BASE = 'https://api.jikan.moe/v4';
     const YOUTUBE_API_KEY = 'AIzaSyAssRCgZTTDcTgHM3Efa18bBXhXlxtTW8k'; // User provided API key
 
@@ -87,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const showDetails = async (animeId) => {
         openModal();
-        modalBody.innerHTML = '<div id="loading">불러오는 중...</div>';
+        modalBody.innerHTML = '<div id="modal-loading-indicator">불러오는 중...</div>';
         
         const animePromise = fetchData(`/anime/${animeId}/full`);
         const charactersPromise = fetchData(`/anime/${animeId}/characters`);
@@ -259,11 +268,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- API Fetching ---
     const fetchData = async (endpoint, limit = 10) => {
-        loadingIndicator.style.display = 'block';
+        showGlobalLoading();
         try {
-            const url = `${API_BASE}${endpoint}${endpoint.includes('?') ? '&' : '?'}limit=${limit}&sfw`;
-            const finalUrl = endpoint.includes('/characters') || endpoint.includes('/full') || endpoint.includes('/random') ? `${API_BASE}${endpoint}` : url;
-            const response = await fetch(finalUrl);
+            let url;
+            // Endpoints that do not typically use a 'limit' parameter from this function's default
+            if (endpoint.includes('/characters') || endpoint.includes('/full') || endpoint.includes('/random')) {
+                url = `${API_BASE}${endpoint}`;
+            } else {
+                // For other endpoints, apply the limit
+                url = `${API_BASE}${endpoint}${endpoint.includes('?') ? '&' : '?'}limit=${limit}&sfw`;
+            }
+            
+            const response = await fetch(url); // Use the correctly constructed URL
             if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
             const data = await response.json();
             return data.data;
@@ -271,7 +287,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('API fetch error:', error);
             return null;
         } finally {
-            loadingIndicator.style.display = 'none';
+            hideGlobalLoading();
         }
     };
 
@@ -315,46 +331,24 @@ document.addEventListener('DOMContentLoaded', () => {
         showSearchResults(false);
     });
 
-    const laftelLink = document.getElementById('laftel-link');
-    laftelLink.addEventListener('click', (e) => {
-        e.preventDefault();
-        window.open(laftelLink.href, 'laftel-popup', 'width=800,height=600');
-    });
+    const externalLinksConfig = [
+        { id: 'laftel-link', popupName: 'laftel-popup' },
+        { id: 'figure-link', popupName: 'figure-popup' },
+        { id: 'community-link', popupName: 'community-popup' },
+        { id: 'novel-link', popupName: 'novel-popup' },
+        { id: 'ost-link', popupName: 'ost-popup' },
+        { id: 'naver-webtoon-link', popupName: 'naver-webtoon-popup' },
+        { id: 'kakao-webtoon-link', popupName: 'kakao-webtoon-popup' },
+    ];
 
-    const figureLink = document.getElementById('figure-link');
-    figureLink.addEventListener('click', (e) => {
-        e.preventDefault();
-        window.open(figureLink.href, 'figure-popup', 'width=800,height=600');
-    });
-
-    const communityLink = document.getElementById('community-link');
-    communityLink.addEventListener('click', (e) => {
-        e.preventDefault();
-        window.open(communityLink.href, 'community-popup', 'width=800,height=600');
-    });
-
-    const novelLink = document.getElementById('novel-link');
-    novelLink.addEventListener('click', (e) => {
-        e.preventDefault();
-        window.open(novelLink.href, 'novel-popup', 'width=800,height=600');
-    });
-
-    const ostLink = document.getElementById('ost-link');
-    ostLink.addEventListener('click', (e) => {
-        e.preventDefault();
-        window.open(ostLink.href, 'ost-popup', 'width=800,height=600');
-    });
-
-    const naverWebtoonLink = document.getElementById('naver-webtoon-link');
-    naverWebtoonLink.addEventListener('click', (e) => {
-        e.preventDefault();
-        window.open(naverWebtoonLink.href, 'naver-webtoon-popup', 'width=800,height=600');
-    });
-
-    const kakaoWebtoonLink = document.getElementById('kakao-webtoon-link');
-    kakaoWebtoonLink.addEventListener('click', (e) => {
-        e.preventDefault();
-        window.open(kakaoWebtoonLink.href, 'kakao-webtoon-popup', 'width=800,height=600');
+    externalLinksConfig.forEach(({ id, popupName }) => {
+        const linkElement = document.getElementById(id);
+        if (linkElement) {
+            linkElement.addEventListener('click', (e) => {
+                e.preventDefault();
+                window.open(linkElement.href, popupName, 'width=800,height=600');
+            });
+        }
     });
 
     // Initial load
