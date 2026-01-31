@@ -471,20 +471,51 @@ main {
     background-color: #d62c7e; /* Darker pink on hover */
 }
 
-.news-link {
-    text-decoration: none;
-    color: inherit;
-    display: block;
-    transition: transform 0.2s ease-in-out;
-}
-
-.news-link:hover {
-    transform: scale(1.02);
-}
-
 .news-link h2 {
     color: var(--accent-color);
 }
+
+.news-links-container {
+    display: flex;
+    justify-content: center; /* Center the links */
+    gap: 15px; /* Space between links */
+    margin-top: 20px;
+}
+
+.news-link-item {
+    display: inline-block;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-weight: bold;
+    text-decoration: none;
+    color: white; /* Default text color for all news links */
+    transition: background-color 0.3s ease;
+}
+
+.naver-news {
+    background-color: #1EC800; /* Naver Green */
+}
+
+.naver-news:hover {
+    background-color: #17A000;
+}
+
+.google-news {
+    background-color: #4285F4; /* Google Blue */
+}
+
+.google-news:hover {
+    background-color: #357AE8;
+}
+
+.youtube-news {
+    background-color: #FF0000; /* YouTube Red */
+}
+
+.youtube-news:hover {
+    background-color: #CC0000;
+}
+
 
 footer {
     text-align: center;
