@@ -593,20 +593,24 @@ footer a:hover {
 @media (max-width: 768px) {
     header {
         flex-direction: column;
-        gap: 10px;
-        padding: 15px; /* Reduced padding */
+        gap: 8px; /* Reduced gap */
+        padding: 10px; /* Further reduced padding */
     }
     header h1 {
-        font-size: 1.8rem; /* Reduced font size */
+        font-size: 1.6rem; /* Further reduced font size */
     }
     #search-input {
         width: 100%;
         border-radius: 20px;
+        padding: 8px 12px; /* Reduced padding */
+        font-size: 0.9rem; /* Reduced font size */
     }
     #search-form button {
         border-radius: 20px;
-        margin-top: 10px;
+        margin-top: 8px; /* Reduced margin */
         width: 100%;
+        padding: 8px 15px; /* Reduced padding */
+        font-size: 0.9rem; /* Reduced font size */
     }
     #search-form {
         flex-direction: column;
@@ -616,14 +620,14 @@ footer a:hover {
         flex-direction: column; /* Stack links vertically */
         width: 100%;
         margin-left: 0; /* Remove default margin-left from action-link */
-        gap: 8px; /* Adjust gap for vertical stacking */
+        gap: 6px; /* Further adjusted gap for vertical stacking */
     }
     .main-nav .action-link {
         margin-left: 0; /* Ensure links fill width */
         width: 100%;
         text-align: center; /* Center text in links */
-        padding: 8px 15px; /* Slightly reduced padding for links */
-        font-size: 0.9rem; /* Slightly reduced font size for links */
+        padding: 6px 10px; /* Further reduced padding for links */
+        font-size: 0.8rem; /* Further reduced font size for links */
     }
     .anime-row {
         flex-direction: column; /* Stack anime cards vertically */
