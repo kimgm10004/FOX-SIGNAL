@@ -604,17 +604,25 @@ footer a:hover {
         border-radius: 20px;
         padding: 8px 12px; /* Reduced padding */
         font-size: 0.9rem; /* Reduced font size */
-    }
-    #search-form button {
-        border-radius: 20px;
-        margin-top: 8px; /* Reduced margin */
-        width: 100%;
-        padding: 8px 15px; /* Reduced padding */
-        font-size: 0.9rem; /* Reduced font size */
+        padding-right: 60px; /* Make space for the absolute positioned button */
     }
     #search-form {
-        flex-direction: column;
+        flex-direction: row; /* Change to row for button positioning */
         width: 100%;
+        position: relative; /* For absolute positioning of button */
+        align-items: center; /* Vertically align items in the middle */
+    }
+    #search-form button {
+        position: absolute; /* Position the button absolutely */
+        right: 0; /* Align to the right */
+        top: 50%; /* Center vertically */
+        transform: translateY(-50%); /* Adjust for perfect vertical centering */
+        width: 50px; /* Smaller width */
+        height: 36px; /* Match input height roughly */
+        border-radius: 20px; /* Uniform rounded corners */
+        padding: 0; /* Remove padding */
+        font-size: 0.8rem; /* Reduced font size */
+        margin-top: 0; /* Remove margin-top */
     }
     .main-nav { /* Add responsive styles for main-nav */
         flex-direction: column; /* Stack links vertically */
