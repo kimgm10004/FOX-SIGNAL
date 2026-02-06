@@ -604,7 +604,7 @@ footer a:hover {
         border-radius: 20px;
         padding: 8px 12px; /* Reduced padding */
         font-size: 0.9rem; /* Reduced font size */
-        padding-right: 60px; /* Make space for the absolute positioned button */
+        padding-right: 110px; /* Make space for two absolute positioned buttons (50px each + 10px space) */
     }
     #search-form {
         flex-direction: row; /* Change to row for button positioning */
@@ -612,9 +612,9 @@ footer a:hover {
         position: relative; /* For absolute positioning of button */
         align-items: center; /* Vertically align items in the middle */
     }
-    #search-form button {
+    #search-form button[type="submit"] { /* Target the search button specifically */
         position: absolute; /* Position the button absolutely */
-        right: 0; /* Align to the right */
+        right: 55px; /* Align to the right, leaving space for refresh button */
         top: 50%; /* Center vertically */
         transform: translateY(-50%); /* Adjust for perfect vertical centering */
         width: 50px; /* Smaller width */
@@ -623,6 +623,19 @@ footer a:hover {
         padding: 0; /* Remove padding */
         font-size: 0.8rem; /* Reduced font size */
         margin-top: 0; /* Remove margin-top */
+    }
+    .refresh-button { /* Styling for the new refresh button */
+        position: absolute;
+        right: 0; /* Align to the very right */
+        top: 50%;
+        transform: translateY(-50%);
+        width: 50px; /* Smaller width */
+        height: 36px; /* Match input height roughly */
+        border-radius: 20px;
+        padding: 0;
+        font-size: 0.8rem;
+        margin-top: 0;
+        background-color: var(--secondary-color); /* Distinct background color */
     }
     .main-nav { /* Add responsive styles for main-nav */
         flex-direction: column; /* Stack links vertically */

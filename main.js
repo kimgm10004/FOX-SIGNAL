@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById('search-input');
     const siteTitle = document.querySelector('header h1');
     const loadingIndicator = document.getElementById('loading');
+    const refreshButton = document.getElementById('refresh-button'); // Get reference to refresh button
 
     // Modal
     const modalOverlay = document.getElementById('modal-overlay');
@@ -28,6 +29,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const hideGlobalLoading = () => {
         loadingIndicator.style.display = 'none';
     };
+
+    if (refreshButton) {
+        refreshButton.addEventListener('click', () => {
+            window.location.reload(); // Reloads the entire page
+        });
+    }
 
     const API_BASE = 'https://api.jikan.moe/v4';
     const YOUTUBE_API_KEY = 'AIzaSyAssRCgZTTDcTgHM3Efa18bBXhXlxtTW8k'; // User provided API key
